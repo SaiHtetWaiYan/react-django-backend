@@ -10,7 +10,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     @classmethod
     def get_token(cls, user):
         token = super().get_token(user)
-        token['username'] = user.username
+        token['email'] = user.email
         return token
 
 
@@ -25,6 +25,6 @@ class UserRegistrationView(APIView):
             user = serializer.save()
             token_serializer = MyTokenObtainPairSerializer()
             tokens = token_serializer.validate(
-                {'username': user.username, 'password': request.data['password']})
+                {'email': user.email, 'password': request.data['password']})
             return Response(tokens, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

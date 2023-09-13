@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from django.contrib.auth.models import User
+from api.models import User
 from rest_framework.validators import UniqueValidator
 from django.contrib.auth.password_validation import validate_password
 
@@ -15,7 +15,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ['username', 'password', 'confirm_password', 'email']
+        fields = ['first_name', 'last_name',
+                  'password', 'confirm_password', 'email']
 
     def validate(self, attrs):
         if attrs['password'] != attrs['confirm_password']:
@@ -26,8 +27,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         # Create a new user with the validated data
         user = User.objects.create(
-            username=validated_data['username'],
-            email=validated_data['email']
+            email=validated_data['email'],
+            first_name=validated_data['first_name'],
+            last_name=validated_data['last_name']
         )
         # Set the user's password securely
         user.set_password(validated_data['password'])
